@@ -16,4 +16,5 @@ set WALLPAPER_TARGET="./result.png"
 REM Chemin d'accès vers le dossier d'archive, mettre "" pour désactiver l'archivage.
 set ARCHIVE_DIRECTORY="./archives"
 
+REM "chemin_d_acces_a_python" sccript.py chmin_d_accès_au_nouveau_fond_ecran chemin_d_acces_aux_cadre_sur_buzz com_de_la_machine chemin_où_placer_le_fond dossier_d_archivage
 "c:\Python27\python.exe" gen_cadre.py %1 %DEFAULT_CADRE_DIRECTORY% %MACHINE_NAME% %WALLPAPER_TARGET% %ARCHIVE_DIRECTORY%

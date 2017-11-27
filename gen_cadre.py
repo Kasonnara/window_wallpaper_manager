@@ -10,6 +10,21 @@ MACHINE_NAME = None
 WALLPAPER_TARGET = None
 ARCHIVE_DIRECTORY = None
 
+def usage():
+    print("Usage, par le script change_wallpaper.bat:")
+    print(" soit drag&drop du nouveau fond sur l icone de change_wallpaper.bat.")
+    print(" soit lancer le script avec pour parametre le chemin d acces au fichier image du nouveau fond.")
+    print("")
+    print("Usage, directement par le script python")
+    print("'c:/.../python.exe gen_cadre.py source_wallpaper source_cadres machine destination archive'")
+    print(" source_wallpaper = chemin d acces au nouveau fond d ecran.")
+    print(" source_cadres    = chemin d acces aux cadres sur buzz.")
+    print(" machine          = nom de la machine courante (ce nom doit etre contenu dans le nom de son cadre sur buzz)")
+    print(" destination      = chemin vers l endroit ou doit etre enregistre le nouveau cadre.\n"
+          "                    si c'est un dossier : simple ajout du nouveau.\n"
+          "                    si c'est un fichier : remplacement et archivage si possible de l ancien.")
+    print(" archive          = chemin d acces au dossier d archivage.")
+    input()
 # Check input validity
 cadre_path = None
 wallpaper_path = None
