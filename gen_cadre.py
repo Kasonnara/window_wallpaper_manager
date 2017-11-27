@@ -1,5 +1,5 @@
+import datetime
 import os
-import random
 import sys
 
 from PIL import Image
@@ -7,8 +7,9 @@ from PIL import Image
 #TODO get auto nom du pc
 DEFAULT_CADRE_DIRECTORY = None
 MACHINE_NAME = None
-WALLPAPER_TARGET = None
+TARGET_DIRECTORY = None
 ARCHIVE_DIRECTORY = None
+
 
 def usage():
     print("Usage, par le script change_wallpaper.bat:")
@@ -36,7 +37,7 @@ else:
     # Normal usage
     DEFAULT_CADRE_DIRECTORY = sys.argv[2]
     MACHINE_NAME = sys.argv[3]
-    WALLPAPER_TARGET = sys.argv[4]
+    TARGET_DIRECTORY = sys.argv[4]
     if len(sys.argv) == 6:
         ARCHIVE_DIRECTORY = sys.argv[5]
     cadre_list = os.listdir(DEFAULT_CADRE_DIRECTORY)
@@ -59,31 +60,20 @@ with Image.open(os.path.join(DEFAULT_CADRE_DIRECTORY, cadre_path)) as img_cadre:
         result = img_wallpaper.resize(img_cadre.size)
         result.paste(img_cadre, None, img_cadre)
 
-        # Save merged wallpaper
-        if os.path.basename(WALLPAPER_TARGET) == "":
-            # wallpaper Target is a directory
-            # Simply add new wallpaper
-            print("Ajout du nouveau fond d'écran.")
-            result.save(os.path.join(WALLPAPER_TARGET, os.path.basename(wallpaper_path)))
-        else:
-            # wallpaper target is a file
-            # Archive last wallpaper if possible
-            if not (ARCHIVE_DIRECTORY is None or ARCHIVE_DIRECTORY == "" or not os.path.exists(WALLPAPER_TARGET)):
-                if not os.path.exists(ARCHIVE_DIRECTORY):
-                    os.mkdir(ARCHIVE_DIRECTORY)
-                print("Archivage de l'ancien fond d'écran.")
-                os.rename(WALLPAPER_TARGET, os.path.join(ARCHIVE_DIRECTORY, "Archive_" + str(random.randint(0, 10 ** 5))))
-            # Replace with new wallpaper
-            print("Remplacement du fond d'écran.")
-            result.save(WALLPAPER_TARGET)
-
-
-def refresh_windows_wallpaper(wallpaper_filename):
-    #TODO tester si ça marche bien
-    os.system("reg add \"HKCU\Control Panel\Desktop\" /v Wallpaper /t REG_SZ /d \"C:\%s\" /f;"
-      "reg add \"HKCU\Control Panel\Desktop\" /v TileWallpaper /t REG_SZ /d 0 /f;"
-      "reg add \"HKCU\Control Panel\Desktop\" /v WallpaperStyle /t REG_SZ /d 2 /f;"
-      "RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters ,1 ,true;" % wallpaper_filename)
+        # Compute new unique path
+        target_path = os.path.join(TARGET_DIRECTORY, str(datetime.datetime.now())+"-"+MACHINE_NAME+"-"+os.path.basename(wallpaper_path)+".bmp")
+        # wallpaper target is a file
+        # Archive last wallpaper if possible
+        if not (ARCHIVE_DIRECTORY is None or ARCHIVE_DIRECTORY == "" or not os.path.exists(TARGET_DIRECTORY)):
+            print("Archivage désactivé, la nouvelle impémentation rendant sa fonction principale innutile.")
+            #if not os.path.exists(ARCHIVE_DIRECTORY):
+            #    os.mkdir(ARCHIVE_DIRECTORY)
+            #print("Archivage de l'ancien fond d'écran.")
+            #os.rename(TARGET_DIRECTORY, os.path.join(ARCHIVE_DIRECTORY, "Archive_" + str(random.randint(0, 10 ** 5))))
+        # Replace with new wallpaper
+        print("Remplacement du fond d'écran.")
+        result.save(target_path)
+        #refresh_windows_wallpaper(target_path)
 
 """
 fig = plt.figure()
