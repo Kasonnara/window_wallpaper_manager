@@ -28,17 +28,10 @@ def usage():
     input()
 
 
-def refresh_windows_wallpaper(wallpaper_path):
-    """
-    os.system("reg add \"HKCU\Control Panel\Desktop\" /v Wallpaper /t REG_SZ /d \"C:\%s\" /f;"
-      "reg add \"HKCU\Control Panel\Desktop\" /v TileWallpaper /t REG_SZ /d 0 /f;"
-      "reg add \"HKCU\Control Panel\Desktop\" /v WallpaperStyle /t REG_SZ /d 2 /f;"
-      "RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters ,1 ,true;" % wallpaper_filename)
-    """
-    # TODO tester si ça marche bien
+def refresh_windows_wallpaper(wallpaper_source_path):
     import ctypes
     SPI_SETDESKWALLPAPER = 20
-    ctypes.windll.user32.SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, wallpaper_path, 3)
+    ctypes.windll.user32.SystemParametersInfoW(SPI_SETDESKWALLPAPER, 0, wallpaper_source_path, 3)
 
 
 # Check input validity
@@ -77,9 +70,9 @@ with Image.open(os.path.join(DEFAULT_CADRE_DIRECTORY, cadre_path)) as img_cadre:
 
         # Compute new unique path
         wp_name = os.path.basename(wallpaper_path)
-        if wp_name.rfind(".") > -1:
-            wp_name = wp_name[:wp_name.rfind(".")]
-        target_path = os.path.abspath(os.path.join(TARGET_DIRECTORY, str(datetime.datetime.now()).replace(" ","")"-"+MACHINE_NAME+"-"+wp_name+".bmp"))
+        target_path = os.path.abspath(os.path.join(TARGET_DIRECTORY,
+                                                   datetime.datetime.now().strftime("%Y_%d_%m-%H_%M_%S") +
+                                                   "-" + MACHINE_NAME + "-" + wp_name))
         # wallpaper target is a file
         # Archive last wallpaper if possible
         if not (ARCHIVE_DIRECTORY is None or ARCHIVE_DIRECTORY == "" or not os.path.exists(TARGET_DIRECTORY)):
@@ -91,30 +84,4 @@ with Image.open(os.path.join(DEFAULT_CADRE_DIRECTORY, cadre_path)) as img_cadre:
         # Replace with new wallpaper
         print("Remplacement du fond d ecran.")
         result.save(target_path)
-        #refresh_windows_wallpaper(target_path)
-
-"""
-fig = plt.figure()
-ax = fig.add_subplot("111", frame_on=False)
-
-img_cadre = im.imread(cadre_path)
-img_wallpaper = im.imread(wallpaper_path)
-a, b, c = img_cadre.shape
-x, y, z = img_wallpaper.shape
-
-print("cadre", img_cadre.shape)
-print("fond", img_wallpaper.shape)
-
-import numpy as np
-alpha = np.array([0.5])
-result = img_cadre.copy()
-for k, line in enumerate(result):
-    for l, pixel in enumerate(line):
-        if pixel[-1] < 0.5:
-            #print((k * a) // x, (l * b)//y)
-            #print(img_wallpaper[(k * a) // x, (l * b)//y])
-            result[k, l, :3] = img_wallpaper[(k * a) // x, (l * b)//y, :3]
-            result[k, l, 4:4] = alpha
-            #result[k, l, :3] = np.array([1,0,1])
-im.imsave("result.png", result)
-"""
+        refresh_windows_wallpaper(target_path)
