@@ -26,6 +26,21 @@ def usage():
           "                    si c'est un fichier : remplacement et archivage si possible de l ancien.")
     print(" archive          = chemin d acces au dossier d archivage.")
     input()
+
+
+def refresh_windows_wallpaper(wallpaper_path):
+    """
+    os.system("reg add \"HKCU\Control Panel\Desktop\" /v Wallpaper /t REG_SZ /d \"C:\%s\" /f;"
+      "reg add \"HKCU\Control Panel\Desktop\" /v TileWallpaper /t REG_SZ /d 0 /f;"
+      "reg add \"HKCU\Control Panel\Desktop\" /v WallpaperStyle /t REG_SZ /d 2 /f;"
+      "RUNDLL32.EXE USER32.DLL,UpdatePerUserSystemParameters ,1 ,true;" % wallpaper_filename)
+    """
+    # TODO tester si ça marche bien
+    import ctypes
+    SPI_SETDESKWALLPAPER = 20
+    ctypes.windll.user32.SystemParametersInfoA(SPI_SETDESKWALLPAPER, 0, wallpaper_path, 3)
+
+
 # Check input validity
 cadre_path = None
 wallpaper_path = None
