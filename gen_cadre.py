@@ -28,28 +28,29 @@ def usage():
 # Check input validity
 cadre_path = None
 wallpaper_path = None
-if len(sys.argv) < 6:
-    print("Erreur: veuillez indiquer le chemin d'accès au fond d'écran.")
+if len(sys.argv) < 5 or len(sys.argv) > 6:
+    print("Erreur: nombre de parametres incorrect.")
+    usage()
     sys.exit(1)
-elif len(sys.argv) == 6:
+else:
     # Normal usage
     DEFAULT_CADRE_DIRECTORY = sys.argv[2]
     MACHINE_NAME = sys.argv[3]
     WALLPAPER_TARGET = sys.argv[4]
-    ARCHIVE_DIRECTORY = sys.argv[5]
+    if len(sys.argv) == 6:
+        ARCHIVE_DIRECTORY = sys.argv[5]
     cadre_list = os.listdir(DEFAULT_CADRE_DIRECTORY)
     for cadre in cadre_list:
         if MACHINE_NAME in cadre and "." in cadre and not ".py" in cadre:
-            print(cadre)
+            print("Cadre trouvé :", cadre)
             cadre_path = cadre
-    wallpaper_path = sys.argv[1]
     if cadre_path is None:
-        print("Erreur: cadre par defaut introuvable pour la machine %s dans le dossier '%s'" %
-              (MACHINE_NAME, DEFAULT_CADRE_DIRECTORY))
-        sys.exit(3)
-else:
-    print("Erreur: Trop de paramètres.")
-    sys.exit(2)
+        print("Erreur: cadre introuvable pour la machine {} dans le dossier '{}'".format(
+            MACHINE_NAME, DEFAULT_CADRE_DIRECTORY))
+        input()
+        sys.exit(2)
+    wallpaper_path = sys.argv[1]
+
 
 # Open files
 with Image.open(os.path.join(DEFAULT_CADRE_DIRECTORY, cadre_path)) as img_cadre:
