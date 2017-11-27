@@ -17,4 +17,5 @@ REM Chemin d'accès vers le dossier d'archive, mettre "" pour désactiver l'arch
 set ARCHIVE_DIRECTORY=""
 
 REM "chemin_d_acces_a_python" sccript.py chmin_d_accès_au_nouveau_fond_ecran chemin_d_acces_aux_cadre_sur_buzz com_de_la_machine chemin_où_placer_le_fond dossier_d_archivage
+REM si vous n'avez pas défini python dans la variable d'environnement PATH, veuillez remplacer python par le chemin d'accès a l'interpréteur python
 python gen_cadre.py %1 %DEFAULT_CADRE_DIRECTORY% %MACHINE_NAME% %TARGET_DIRECTORY% %ARCHIVE_DIRECTORY%

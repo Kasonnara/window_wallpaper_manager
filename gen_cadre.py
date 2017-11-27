@@ -52,7 +52,7 @@ else:
     # Normal usage
     DEFAULT_CADRE_DIRECTORY = sys.argv[2]
     MACHINE_NAME = sys.argv[3]
-    TARGET_DIRECTORY = sys.argv[4]
+    TARGET_DIRECTORY = sys.argv[4] #.replace(" ", "") # TODO vérifier si c'est essentiel peux ammener a des erreurs
     if len(sys.argv) == 6:
         ARCHIVE_DIRECTORY = sys.argv[5]
     cadre_list = os.listdir(DEFAULT_CADRE_DIRECTORY)
@@ -76,17 +76,20 @@ with Image.open(os.path.join(DEFAULT_CADRE_DIRECTORY, cadre_path)) as img_cadre:
         result.paste(img_cadre, None, img_cadre)
 
         # Compute new unique path
-        target_path = os.path.join(TARGET_DIRECTORY, str(datetime.datetime.now())+"-"+MACHINE_NAME+"-"+os.path.basename(wallpaper_path)+".bmp")
+        wp_name = os.path.basename(wallpaper_path)
+        if wp_name.rfind(".") > -1:
+            wp_name = wp_name[:wp_name.rfind(".")]
+        target_path = os.path.abspath(os.path.join(TARGET_DIRECTORY, str(datetime.datetime.now()).replace(" ","")"-"+MACHINE_NAME+"-"+wp_name+".bmp"))
         # wallpaper target is a file
         # Archive last wallpaper if possible
         if not (ARCHIVE_DIRECTORY is None or ARCHIVE_DIRECTORY == "" or not os.path.exists(TARGET_DIRECTORY)):
-            print("Archivage désactivé, la nouvelle impémentation rendant sa fonction principale innutile.")
+            print("Archivage desactive, la nouvelle impementation rendant sa fonction principale innutile.")
             #if not os.path.exists(ARCHIVE_DIRECTORY):
             #    os.mkdir(ARCHIVE_DIRECTORY)
             #print("Archivage de l'ancien fond d'écran.")
             #os.rename(TARGET_DIRECTORY, os.path.join(ARCHIVE_DIRECTORY, "Archive_" + str(random.randint(0, 10 ** 5))))
         # Replace with new wallpaper
-        print("Remplacement du fond d'écran.")
+        print("Remplacement du fond d ecran.")
         result.save(target_path)
         #refresh_windows_wallpaper(target_path)
 
